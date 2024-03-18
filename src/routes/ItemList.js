@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import moment from "moment";
-import useAxiosGet from "../hooks/useAxiosGet";
+import useAxios from "../hooks/useAxios";
 import { Spinner, Table } from "react-bootstrap";
 import styles from "../css/ItemList.module.css";
 import Navbars from "../components/Navbars";
@@ -8,9 +8,18 @@ import Navbars from "../components/Navbars";
 function ItemList() {
   const [response, setResponse] = useState([]);
 
-  const { responseData, error, isLoading, refectch } = useAxiosGet({
+  const {
+    responseData,
+    error,
+    isLoading,
+    request: performGet,
+  } = useAxios({
+    method: "GET",
     url: `/api/item`,
   });
+  useEffect(() => {
+    performGet();
+  }, []);
   useEffect(() => {
     if (!isLoading) {
       if (responseData !== null) {
@@ -20,7 +29,7 @@ function ItemList() {
         console.log(status);
       }
     }
-  }, [responseData, error, isLoading]);
+  }, [isLoading]);
 
   return (
     <div className={styles.container}>

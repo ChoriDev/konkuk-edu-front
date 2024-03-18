@@ -9,7 +9,7 @@ function Navbars() {
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
             <Nav.Link href="/">홈</Nav.Link>
-            <Nav.Link href="/item-list">물품 대여 현황</Nav.Link>
+            <Nav.Link href="/items">물품 대여 현황</Nav.Link>
             {/* <NavDropdown title="Dropdown" id="basic-nav-dropdown">
               <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
               <NavDropdown.Item href="#action/3.2">
