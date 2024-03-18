@@ -15,8 +15,12 @@ import Navbars from "../components/Navbars";
 function AdminItemManaging() {
   const [response, setResponse] = useState([]);
   const [addModalShow, setAddModalShow] = useState(false);
+  const [addMode, setAddMode] = useState(true);
   const [newNo, setNewNo] = useState("");
+  const [newStartNo, setNewStartNo] = useState("");
+  const [newEndNo, setNewEndNo] = useState("");
   const [newName, setNewName] = useState("");
+  const [isValid, setIsValid] = useState(false);
 
   const {
     responseData,
@@ -41,16 +45,33 @@ function AdminItemManaging() {
     }
   }, [responseData, error]);
 
-  // 물품 추가
+  // 물품 하나 추가
   const { request: addItem } = useAxios({
     method: "POST",
     url: `api/item/`,
     requestData: {
+      start_no: newStartNo,
+      end_no: newEndNo,
       no: newNo,
       name: newName,
     },
     onSuccess: performGet,
   });
+
+  const changeAddMode = () => {
+    setAddMode((current) => !current);
+    setNewStartNo("");
+    setNewEndNo("");
+    setNewNo("");
+  };
+
+  const changeStartNo = (e) => {
+    setNewStartNo(e.target.value);
+  };
+
+  const changeEndNo = (e) => {
+    setNewEndNo(e.target.value);
+  };
 
   const changeNo = (e) => {
     setNewNo(e.target.value);
@@ -59,6 +80,15 @@ function AdminItemManaging() {
   const changeName = (e) => {
     setNewName(e.target.value);
   };
+
+  useEffect(() => {
+    if (
+      (newNo !== "" || (newStartNo !== "" && newEndNo !== "")) &&
+      newName !== ""
+    ) {
+      setIsValid(true);
+    }
+  }, [newNo, newStartNo, newEndNo, newName]);
 
   // 추가 모달 열기
   const openAddModal = () => {
@@ -124,28 +154,78 @@ function AdminItemManaging() {
           </div>
         )}
       </div>
-      <Modal show={addModalShow} centered>
+      <Modal show={addModalShow} onHide={closeAddModal} centered>
+        <div className={styles.addModeBox}>
+          <Form.Check
+            inline
+            type={"radio"}
+            name="addMode"
+            label={"물품 하나"}
+            defaultChecked
+            onClick={changeAddMode}
+          />
+          <Form.Check
+            inline
+            type={"radio"}
+            name="addMode"
+            label={"물품 여러 개"}
+            onClick={changeAddMode}
+          />
+        </div>
         <Form>
-          <Modal.Body>
-            <InputGroup>
-              <InputGroup.Text>번호</InputGroup.Text>
-              <Form.Control
-                type="text"
-                value={newNo}
-                placeholder="ex) 1"
-                onChange={changeNo}
-              />
-            </InputGroup>
-            <InputGroup>
-              <InputGroup.Text>물품명</InputGroup.Text>
-              <Form.Control
-                type="text"
-                value={newName}
-                placeholder="ex) 우산"
-                onChange={changeName}
-              />
-            </InputGroup>
-          </Modal.Body>
+          {addMode ? (
+            <Modal.Body className={styles.modalBody}>
+              <InputGroup>
+                <InputGroup.Text>번호</InputGroup.Text>
+                <Form.Control
+                  type="text"
+                  value={newNo}
+                  placeholder="ex) 1"
+                  onChange={changeNo}
+                  maxLength={2}
+                />
+              </InputGroup>
+              <InputGroup>
+                <InputGroup.Text>물품명</InputGroup.Text>
+                <Form.Control
+                  type="text"
+                  value={newName}
+                  placeholder="ex) 우산"
+                  onChange={changeName}
+                />
+              </InputGroup>
+            </Modal.Body>
+          ) : (
+            <Modal.Body className={styles.modalBody}>
+              <InputGroup>
+                <InputGroup.Text>번호</InputGroup.Text>
+                <Form.Control
+                  type="text"
+                  value={newStartNo}
+                  placeholder="ex) 1"
+                  onChange={changeStartNo}
+                  maxLength={2}
+                />
+                <InputGroup.Text>~</InputGroup.Text>
+                <Form.Control
+                  type="text"
+                  value={newEndNo}
+                  placeholder="ex) 1"
+                  onChange={changeEndNo}
+                  maxLength={2}
+                />
+              </InputGroup>
+              <InputGroup>
+                <InputGroup.Text>물품명</InputGroup.Text>
+                <Form.Control
+                  type="text"
+                  value={newName}
+                  placeholder="ex) 우산"
+                  onChange={changeName}
+                />
+              </InputGroup>
+            </Modal.Body>
+          )}
           <Modal.Footer>
             <Button type="button" variant="secondary" onClick={closeAddModal}>
               닫기
@@ -155,6 +235,7 @@ function AdminItemManaging() {
                 addItem();
                 closeAddModal();
               }}
+              disabled={!isValid}
             >
               추가
             </Button>

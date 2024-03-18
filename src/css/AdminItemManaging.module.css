@@ -1,0 +1,11 @@
+.modalBody {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.addModeBox {
+  display: flex;
+  justify-content: space-around;
+  margin: 16px;
+}
