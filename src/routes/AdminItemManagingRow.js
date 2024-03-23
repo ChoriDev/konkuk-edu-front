@@ -40,8 +40,10 @@ function AdminItemManagingRow({
       newPhoneNum.length === 13
     ) {
       setIsValid(true);
+    } else {
+      setIsValid(false);
     }
-  }, [newStudentId, newStudentName]);
+  }, [newStudentId, newStudentName, newPhoneNum]);
 
   // 물품 대여
   const { request: borrowItem } = useAxios({
