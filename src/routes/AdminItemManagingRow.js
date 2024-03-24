@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import moment from "moment";
-import { Form, Button, Modal } from "react-bootstrap";
+import { Form, Button } from "react-bootstrap";
 import useAxios from "../hooks/useAxios";
+import DeleteModal from "../components/DeleteModal";
 
 function AdminItemManagingRow({
   id,
@@ -166,25 +167,15 @@ function AdminItemManagingRow({
           </Button>
         </td>
       </tr>
-      <Modal show={deleteModalShow} onHide={closeDeleteModal} centered>
-        <Modal.Body>
-          {no}번 {name}(을)를 삭제하시겠습니까?
-        </Modal.Body>
-        <Modal.Footer>
-          <Button type="button" variant="secondary" onClick={closeDeleteModal}>
-            닫기
-          </Button>
-          <Button
-            variant="danger"
-            onClick={() => {
-              deleteItem();
-              closeDeleteModal();
-            }}
-          >
-            삭제
-          </Button>
-        </Modal.Footer>
-      </Modal>
+      <DeleteModal
+        show={deleteModalShow}
+        onHide={closeDeleteModal}
+        onConfirm={() => {
+          deleteItem();
+          closeDeleteModal();
+        }}
+        itemName={`${no}번 ${name}`}
+      />
     </>
   );
 }
