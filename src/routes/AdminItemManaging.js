@@ -98,6 +98,11 @@ function AdminItemManaging() {
   // 추가 모달 닫기
   const closeAddModal = () => {
     setAddModalShow(false);
+    setNewStartNo("");
+    setNewEndNo("");
+    setNewNo("");
+    setNewName("");
+    setAddMode((current) => !current);
   };
 
   return (
